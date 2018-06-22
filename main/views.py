@@ -25,13 +25,14 @@ class RegistrationAPIView(APIView):
     serializer_class = UserRegistrationSerializer
 
     def post(self, request):
-        user_data = request.data.get('user', {})
+        user_data = request.data
         serializer = self.serializer_class(data=user_data)
 
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
+        serializer.is_valid(raise_exception=True)
 
-        response_data = {'user': serializer.validated_data}
+        user = serializer.save()
+
+        response_data = {'user': UserSerializer(user).data}
 
         return Response(data=response_data, status=HTTP_201_CREATED)
 

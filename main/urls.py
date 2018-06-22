@@ -12,8 +12,8 @@ simple_router.register('groups', views.GroupViewSet, base_name='group')
 simple_router.register('users', views.UserViewSet, base_name='user')
 
 urlpatterns = [
-    path('login', obtain_auth_token),
-    path('logout', invalidate_auth_token),
-    path('register', views.RegistrationAPIView.as_view()),
+    path('login/', obtain_auth_token),
+    path('logout/', invalidate_auth_token),
+    path('register/', views.RegistrationAPIView.as_view()),
     path('', include(simple_router.urls)),
 ]
