@@ -21,13 +21,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 class UserSerializer(serializers.ModelSerializer):
-    group = serializers.SerializerMethodField(method_name='get_group_url')
+    group = serializers.HyperlinkedRelatedField(view_name='user-group', read_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-    def get_group_url(self, instance):
-        return reverse('user-group', args=[instance.id], request=self.context['request'])
 
     class Meta:
         model = User
@@ -51,7 +48,6 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    #group_admin = serializers.HyperlinkedRelatedField(view_name='user-detail', lookup_field='pk', read_only=True)
     group_admin = serializers.SerializerMethodField(method_name='get_group_admin_url')
 
     def get_group_admin_url(self, instance):
