@@ -39,13 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'main',
-    'rest_framework.authtoken'
+    'rest_framework_multiauthtoken',
 ]
 
 # Django REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework_multiauthtoken.authentication.MultiAuthTokenAuthentication',
     )
 }
 
