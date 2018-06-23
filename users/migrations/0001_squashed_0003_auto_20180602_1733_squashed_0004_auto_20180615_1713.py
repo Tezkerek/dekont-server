@@ -8,7 +8,7 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [('main', '0001_initial'), ('main', '0002_auto_20180602_1724'), ('main', '0003_auto_20180602_1733_squashed_0004_auto_20180615_1713')]
+    replaces = [('users', '0001_initial'), ('users', '0002_auto_20180602_1724'), ('users', '0003_auto_20180602_1733_squashed_0004_auto_20180615_1713')]
 
     initial = True
 
@@ -52,7 +52,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='group',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='users', to='main.Group'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='users', to='users.Group'),
         ),
         migrations.AddField(
             model_name='user',
@@ -88,7 +88,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='group',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='users', to='main.Group'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='users', to='users.Group'),
         ),
         migrations.AlterModelManagers(
             name='user',

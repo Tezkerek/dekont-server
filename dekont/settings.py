@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     'django_extensions',
 
-    'main',
+    'users',
     'rest_framework_multiauthtoken',
 ]
 
@@ -100,7 +100,7 @@ DATABASES = {
 }
 
 # User model
-AUTH_USER_MODEL = 'main.User'
+AUTH_USER_MODEL = 'users.User'
 
 
 # Password validation
