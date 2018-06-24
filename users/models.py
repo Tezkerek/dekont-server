@@ -1,6 +1,3 @@
-import string
-import random
-
 from django.db import models
 import django.contrib.auth.models as auth_models
 
@@ -49,10 +46,10 @@ class User(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     username = models.CharField(max_length=64)
 
     # Relationship to group
-    group = models.ForeignKey(Group, on_delete=models.SET_NULL, related_name='users', null=True)
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, related_name='users', null=True, blank=True)
 
     # Parent and children
-    parent = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='children', null=True)
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='children', null=True, blank=True)
 
     # Flags
     is_group_admin = models.BooleanField(default=False)
