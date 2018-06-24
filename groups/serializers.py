@@ -4,15 +4,18 @@ from rest_framework.reverse import reverse
 from .models import Group
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    group_admin = serializers.SerializerMethodField(method_name='get_group_admin_url')
+    group_admin = serializers.SerializerMethodField()
 
-    def get_group_admin_url(self, instance):
-        return reverse('user-detail', args=[instance.group_admin.id], request=self.context['request'])
+    def get_group_admin(self, instance):
+        return {
+            'id': instance.pk,
+            'url': reverse('user-detail', args=[instance.group_admin.id], request=self.context['request'])
+        }
 
     class Meta:
         model = Group
-        fields = ('name', 'invite_code', 'group_admin')
-        read_only_fields = ('invite_code', 'group_admin')
+        fields = ('id', 'name', 'invite_code', 'group_admin')
+        read_only_fields = ('id', 'invite_code', 'group_admin')
 
     def create(self, validated_data):
         group_admin = validated_data.pop('group_admin', None)
