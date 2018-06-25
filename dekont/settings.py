@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'django_extensions',
 
+    'core',
     'users',
     'groups',
     'rest_framework_multiauthtoken',
