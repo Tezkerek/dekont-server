@@ -1,16 +1,12 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
+from core.fields import PkAndUrlReverseField
+
 from .models import Group
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    group_admin = serializers.SerializerMethodField()
-
-    def get_group_admin(self, instance):
-        return {
-            'id': instance.pk,
-            'url': reverse('user-detail', args=[instance.group_admin.id], request=self.context['request'])
-        }
+    group_admin = PkAndUrlReverseField(view_name='user-detail')
 
     class Meta:
         model = Group

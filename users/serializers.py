@@ -3,6 +3,8 @@ from rest_framework.compat import authenticate
 from rest_framework.reverse import reverse
 from django.utils.translation import ugettext_lazy as _
 
+from core.fields import PkAndUrlReverseField
+
 from .models import User
 
 
@@ -19,7 +21,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 class UserSerializer(serializers.ModelSerializer):
-    group = serializers.HyperlinkedRelatedField(view_name='user-group', read_only=True)
+    group = PkAndUrlReverseField(view_name='user-group', source='*', get_pk=lambda obj: obj.group_id)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
