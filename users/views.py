@@ -73,16 +73,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
         """
         Acts on the user's group relation.
         """
-        if request.method == 'GET':
-            """
-            Retrieves the user's group.
-            """
-            context = {'request': self.request}
-            serializer = GroupSerializer(self.get_object().group, context=context)
-
-            return Response(data=serializer.data)
-
-        elif request.method == 'POST':
+        if request.method == 'POST':
             """
             Sets the user's group using the invite code (join group).
             """
