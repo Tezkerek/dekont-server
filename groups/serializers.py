@@ -2,15 +2,18 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 from core.fields import PkAndUrlReverseField
+from core.relations import PkHyperlinkedRelatedField
 
 from .models import Group
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
+    serializer_related_field = PkHyperlinkedRelatedField
+
     group_admin = PkAndUrlReverseField(view_name='user-detail')
 
     class Meta:
         model = Group
-        fields = ('id', 'name', 'invite_code', 'group_admin')
+        fields = ('id', 'name', 'invite_code', 'users', 'group_admin')
         read_only_fields = ('id', 'invite_code', 'group_admin')
 
     def create(self, validated_data):
