@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 
@@ -6,14 +6,18 @@ from .permissions import IsInGroup, IsNotInGroup
 from .serializers import GroupSerializer
 from .models import Group
 
-class GroupViewSet(viewsets.GenericViewSet):
+class GroupViewSet(mixins.RetrieveModelMixin,
+                   viewsets.GenericViewSet):
     """
     A ViewSet for actions on groups.
     """
     permission_classes = (IsAuthenticated,)
     serializer_class = GroupSerializer
 
-    queryset = Group.objects.all()
+    def get_queryset(self):
+        # Single-element list containing the user's group.
+        user = self.request.user
+        return Group.objects.filter(pk=user.group_id)
 
     def get_permissions(self):
         permission_classes = [IsAuthenticated]
