@@ -68,6 +68,9 @@ class User(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
 
     objects = UserManager()
 
+    def get_group_members(self):
+        return self.__class__.objects.filter(group_id=self.group_id)
+
     @staticmethod
     def add_approve_report_relationship(approver, reporter):
         """
