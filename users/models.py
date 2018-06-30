@@ -48,8 +48,13 @@ class User(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     # Relationship to group
     group = models.ForeignKey(Group, on_delete=models.SET_NULL, related_name='users', null=True, blank=True)
 
-    # Parent and children
-    parent = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='children', null=True, blank=True)
+    reporters = models.ManyToManyField(
+        'self',
+        through='ApproveReportRelationship',
+        through_fields=['approver', 'reporter'],
+        symmetrical=False,
+        related_name='approvers'
+    )
 
     # Flags
     is_group_admin = models.BooleanField(default=False)
@@ -62,3 +67,27 @@ class User(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     USERNAME_FIELD = 'email'
 
     objects = UserManager()
+
+    @staticmethod
+    def add_approve_report_relationship(approver, reporter):
+        """
+        Creates a ReportRelationship between the approver and reporter.
+        """
+        relationship, created = ApproveReportRelationship.objects.get_or_create(
+            approver=approver,
+            reporter=reporter
+        )
+        return relationship
+
+    def add_approver(self, approver):
+        return self.add_approve_report_relationship(approver, self)
+
+    def add_reporter(self, reporter):
+        return self.add_approve_report_relationship(self, reporter)
+
+class ApproveReportRelationship(models.Model):
+    """
+    Represents a relationship between an approver and a reporter.
+    """
+    approver = models.ForeignKey(User, related_name='approvers_set', on_delete=models.CASCADE)
+    reporter = models.ForeignKey(User, related_name='reporters_set', on_delete=models.CASCADE)

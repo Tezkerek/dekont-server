@@ -24,12 +24,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     serializer_related_field = PkHyperlinkedRelatedField
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     class Meta:
         model = User
-        fields = ('id', 'email', 'password', 'username', 'group', 'parent', 'is_group_admin')
+        fields = ('id', 'email', 'password', 'username', 'group', 'approvers', 'reporters', 'is_group_admin')
         extra_kwargs = {'password': {'write_only': True}}
 
     def update(self, instance, validated_data):
