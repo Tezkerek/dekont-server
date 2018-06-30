@@ -37,6 +37,7 @@ class RegistrationAPIView(APIView):
         return Response(data=response_data, status=HTTP_201_CREATED)
 
 class UserViewSet(mixins.RetrieveModelMixin,
+                  mixins.UpdateModelMixin,
                   viewsets.GenericViewSet):
 
     lookup_field = 'pk'
@@ -52,7 +53,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
     def get_queryset(self):
         # Only users in the same group
         user = self.request.user
-        return User.objects.filter(group_id=user.group_id)
+        return user.get_group_members()
 
     def get_permissions(self):
         action_permission_classes = self.get_action_permission_classes()
