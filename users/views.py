@@ -68,7 +68,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
     def get_action_permission_classes(self):
         return getattr(self, 'action_permission_classes', {})
 
-    @action(methods=['get', 'post', 'delete'], detail=True)
+    @action(methods=['post', 'delete'], detail=True)
     def group(self, request, pk=None):
         """
         Acts on the user's group relation.
