@@ -14,6 +14,7 @@ from groups.models import Group
 
 from .serializers import UserSerializer, UserRegistrationSerializer
 from .models import User
+from .permissions import IsUserOrGroupAdmin
 
 # Create your views here.
 
@@ -44,6 +45,12 @@ class UserViewSet(mixins.RetrieveModelMixin,
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
     action_permission_classes = {
+        'update': {
+            'put': permission_classes + [IsUserOrGroupAdmin]
+        },
+        'partial_update': {
+            'patch': permission_classes + [IsUserOrGroupAdmin]
+        },
         'group': {
             'delete': permission_classes + [IsInGroup],
             'post': permission_classes + [IsNotInGroup]
