@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework.compat import authenticate
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.reverse import reverse
 from django.utils.translation import ugettext_lazy as _
 
@@ -26,9 +27,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'password', 'username', 'group', 'approvers', 'reporters', 'is_group_admin')
+        fields = ('id', 'email', 'username', 'group', 'approvers', 'reporters', 'is_group_admin')
+        admin_editable_fields = ('username', 'approvers', 'is_group_admin')
         extra_kwargs = {
-            'password': {'write_only': True},
             'approvers': {
                 'read_only': False,
                 'queryset': lambda field: field.root.instance.get_group_members()
@@ -41,13 +42,19 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
         internal_value = super().to_internal_value(data)
 
+        if user != self.instance:
+            # Admin can only modify some fields
+            non_admin_fields = set(data.keys()) - set(self.Meta.admin_editable_fields)
+            if non_admin_fields:
+                raise PermissionDenied('Only the user may modify these fields: ' + ', '.join(non_admin_fields))
+
         # Per-field permissions
         if 'approvers' in data:
             if not user.is_group_admin:
                 errors['approvers'] = "Only a group admin can modify this."
         if 'is_group_admin' in data:
             if not user.is_group_admin:
-                errors['is_group_admin'] = "Only a group admin can modify this."
+                raise PermissionDenied("Only a group admin may modify these fields: is_group_admin")
             elif user == self.instance and user.is_group_admin and not internal_value['is_group_admin']:
                 errors['is_group_admin'] = \
                     "You cannot unset yourself as admin. Instead, make somebody else in your group admin"
@@ -78,5 +85,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             instance.approvers.clear()
             for approver in approvers:
                 instance.add_approver(approver)
+
+        # Transfer admin role
+        current_user = self.context['request'].user
+        if 'is_group_admin' in validated_data and current_user != instance:
+            current_user.is_group_admin = False
+            current_user.save()
 
         return instance
