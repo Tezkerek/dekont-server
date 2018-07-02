@@ -44,7 +44,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
     lookup_field = 'pk'
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
-    action_permission_classes = {
+    per_action_permission_classes = {
         'update': {
             'put': permission_classes + [IsUserOrGroupAdmin]
         },
@@ -63,18 +63,15 @@ class UserViewSet(mixins.RetrieveModelMixin,
         return user.get_group_members()
 
     def get_permissions(self):
-        action_permission_classes = self.get_action_permission_classes()
+        per_action_permission_classes = getattr(self, 'per_action_permission_classes', {})
 
         # Get the permissions classes for the action and method,
         # or the default ones if not defined.
-        permission_classes = action_permission_classes \
+        permission_classes = per_action_permission_classes \
             .get(self.action, {}) \
             .get(self.request.method.lower(), self.permission_classes)
 
         return [permission() for permission in permission_classes]
-
-    def get_action_permission_classes(self):
-        return getattr(self, 'action_permission_classes', {})
 
     @action(methods=['post', 'delete'], detail=True)
     def group(self, request, pk=None):

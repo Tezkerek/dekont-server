@@ -9,6 +9,9 @@ class IsInGroup(BasePermission):
     def has_permission(self, request, view):
         return request.user is not None and request.user.group is not None
 
+    def has_object_permission(self, request, view, obj):
+        return request.user.group_id == obj.pk
+
 class IsNotInGroup(BasePermission):
     """
     Checks that the user is not in a group.

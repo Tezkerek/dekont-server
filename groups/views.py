@@ -7,12 +7,24 @@ from .serializers import GroupSerializer
 from .models import Group
 
 class GroupViewSet(mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
                    viewsets.GenericViewSet):
     """
     A ViewSet for actions on groups.
     """
-    permission_classes = (IsAuthenticated,)
     serializer_class = GroupSerializer
+    permission_classes = (IsAuthenticated,)
+    per_action_permission_classes = {
+        'create': {
+            'post': permission_classes + (IsNotInGroup,)
+        },
+        'update': {
+            'put': permission_classes + (IsInGroup,)
+        },
+        'partial_update': {
+            'patch': permission_classes + (IsInGroup,)
+        }
+    }
 
     def get_queryset(self):
         # Single-element list containing the user's group.
@@ -20,10 +32,13 @@ class GroupViewSet(mixins.RetrieveModelMixin,
         return Group.objects.filter(pk=user.group_id)
 
     def get_permissions(self):
-        permission_classes = [IsAuthenticated]
+        per_action_permission_classes = getattr(self, 'per_action_permission_classes', {})
 
-        if self.action == 'create':
-            permission_classes.append(IsNotInGroup)
+        # Get the permissions classes for the action and method,
+        # or the default ones if not defined.
+        permission_classes = per_action_permission_classes \
+            .get(self.action, {}) \
+            .get(self.request.method.lower(), self.permission_classes)
 
         return [permission() for permission in permission_classes]
 
