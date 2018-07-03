@@ -21,6 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'f@m364)cy&*#0ozx#2m8(@)0!2yk7ne6x_hgjg62x(d+&4n_ee'
+OPEN_EXCHANGE_RATES_KEY = '5eddf739d4934c2f9fefd546a53dba59'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,11 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django_extensions',
+    'rest_framework_multiauthtoken',
 
     'core',
     'users',
     'groups',
-    'rest_framework_multiauthtoken',
+    'currencies',
 ]
 
 # Django REST Framework
