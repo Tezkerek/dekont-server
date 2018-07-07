@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from core.fields import PkAndUrlReverseField
 from core.relations import PkHyperlinkedRelatedField
+from core.serializers import PkHyperlinkedModelSerializer
 
 from .models import User
 
@@ -22,9 +23,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user = self.Meta.model.objects.create_user(email, password, **validated_data)
         return user
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    serializer_related_field = PkHyperlinkedRelatedField
-
+class UserSerializer(PkHyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email', 'username', 'group', 'approvers', 'reporters', 'is_group_admin')
