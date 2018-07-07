@@ -19,7 +19,7 @@ class Sum(models.Model):
     Represents a sum with an amount and a currency.
     """
     def __str__(self):
-        return "{} {}".format(self.amount, )
+        return "{} {}".format(self.amount, self.currency.name)
 
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT, related_name='sums')
