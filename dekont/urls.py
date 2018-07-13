@@ -20,5 +20,6 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     path('', include('users.urls')),
-    path('', include('groups.urls'))
+    path('', include('groups.urls')),
+    path('', include('transactions.urls'))
 ]
