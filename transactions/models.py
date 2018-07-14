@@ -44,10 +44,10 @@ class Transaction(models.Model):
 
         if currency is not None:
             # Allow string or Currency instance
-            if isinstance(currency, string):
-                self.sum = Currency.objects.get(name=string)
+            if isinstance(currency, str):
+                self.sum.currency = Currency.objects.get(name=string)
             elif isinstance(currency, Currency):
-                self.sum = currency
+                self.sum.currency = currency
             else:
                 raise AssertionError('currency must be a string or an instance of currencies.Currency')
 
