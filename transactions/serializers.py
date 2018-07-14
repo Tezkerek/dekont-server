@@ -20,7 +20,7 @@ class TransactionSerializer(PkHyperlinkedModelSerializer):
     class Meta:
         model = Transaction
         fields = ('user', 'id', 'date', 'amount', 'currency', 'description', 'supplier', 'document_type', 'document_number', 'document')
-        read_only_fields = ('user',)
+        read_only_fields = ('id', 'user')
 
     def create(self, validated_data):
         # Set the owner as the current user
@@ -33,3 +33,9 @@ class TransactionSerializer(PkHyperlinkedModelSerializer):
         transaction = Transaction.objects.create(**validated_data, sum=transaction_sum)
 
         return transaction
+
+    def update(self, instance, validated_data):
+        # Update the sum relation
+        instance.set_sum(**validated_data.pop('sum'))
+
+        return super().update(instance, validated_data)
