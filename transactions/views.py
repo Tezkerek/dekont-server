@@ -5,6 +5,7 @@ from .serializers import TransactionSerializer
 
 class TransactionViewSet(mixins.ListModelMixin,
                          mixins.RetrieveModelMixin,
+                         mixins.CreateModelMixin,
                          viewsets.GenericViewSet):
 
     lookup_field = 'pk'
