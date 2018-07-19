@@ -14,12 +14,11 @@ class TransactionSerializer(PkHyperlinkedModelSerializer):
         amountField.decimal_places,
         source='sum.amount'
     )
-
     currency = CurrencyField(source='sum.currency')
 
     class Meta:
         model = Transaction
-        fields = ('user', 'id', 'date', 'amount', 'currency', 'description', 'supplier', 'document_type', 'document_number', 'document')
+        fields = ('user', 'id', 'status', 'date', 'amount', 'currency', 'description', 'supplier', 'document_type', 'document_number', 'document')
         read_only_fields = ('id', 'user')
 
     def create(self, validated_data):

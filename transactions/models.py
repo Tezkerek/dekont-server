@@ -20,12 +20,23 @@ class Transaction(models.Model):
     """
     Represents a transaction.
     """
+    PENDING = 0
+    APPROVED = 1
+    REJECTED = 2
+
+    STATUS_CHOICES = (
+        (PENDING, 'PENDING'),
+        (APPROVED, 'APPROVED'),
+        (REJECTED, 'REJECTED')
+    )
+
     date = models.DateField()
     description = models.CharField(max_length=100, blank=True)
     supplier = models.CharField(max_length=100, blank=True)
     document_type = models.CharField(max_length=100, blank=True)
     document_number = models.CharField(max_length=50, blank=True)
     document = models.FileField(null=True, blank=True)
+    status = models.IntegerField(choices=STATUS_CHOICES, default=PENDING)
 
     # Currency and amount
     sum = models.OneToOneField(CurrencySum, on_delete=models.PROTECT)
