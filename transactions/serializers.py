@@ -35,6 +35,7 @@ class TransactionSerializer(PkHyperlinkedModelSerializer):
 
     def update(self, instance, validated_data):
         # Update the sum relation
-        instance.set_sum(**validated_data.pop('sum'))
+        if 'sum' in validated_data:
+            instance.set_sum(**validated_data.pop('sum'))
 
         return super().update(instance, validated_data)
