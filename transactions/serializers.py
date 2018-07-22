@@ -18,8 +18,8 @@ class TransactionSerializer(PkHyperlinkedModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ('user', 'id', 'status', 'date', 'amount', 'currency', 'description', 'supplier', 'document_type', 'document_number', 'document')
-        read_only_fields = ('id', 'user')
+        fields = ('id', 'user', 'status', 'date', 'amount', 'currency', 'description', 'supplier', 'document_type', 'document_number', 'document')
+        read_only_fields = ('id', 'user', 'status')
 
     def create(self, validated_data):
         # Set the owner as the current user
@@ -39,3 +39,11 @@ class TransactionSerializer(PkHyperlinkedModelSerializer):
             instance.set_sum(**validated_data.pop('sum'))
 
         return super().update(instance, validated_data)
+
+class ReporterTransactionSerializer(TransactionSerializer):
+    """
+    TransactionSerializer for the transaction owner's approver.
+    Only allows certain fields to be updated.
+    """
+    class Meta(TransactionSerializer.Meta):
+        read_only_fields = ('id', 'user', 'date', 'amount', 'currency', 'description', 'supplier', 'document_type', 'document_number', 'document')
