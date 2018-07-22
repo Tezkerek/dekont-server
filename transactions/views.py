@@ -19,10 +19,15 @@ class TransactionViewSet(mixins.ListModelMixin,
         # User can access their and their reporters' transactions
         user = self.request.user
 
-        owners = list(user.reporters.values_list('pk', flat=True))
-        owners.append(user.pk)
+        # Filter by owner
+        owner = self.request.query_params.get('user', None)
+        if owner is not None:
+            transactions = Transaction.objects.filter(user_id=owner)
+        else:
+            owners = list(user.reporters.values_list('pk', flat=True))
+            owners.append(user.pk)
 
-        transactions = Transaction.objects.filter(user_id__in=owners)
+            transactions = Transaction.objects.filter(user_id__in=owners)
 
         return transactions
 
