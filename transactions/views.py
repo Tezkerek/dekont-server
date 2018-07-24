@@ -1,5 +1,9 @@
-from rest_framework import viewsets, mixins
+from django.db.models import F, ExpressionWrapper, DecimalField
+
+from rest_framework import viewsets, mixins, exceptions
 from rest_framework.permissions import IsAuthenticated
+
+from currencies.models import Currency
 
 from .serializers import TransactionSerializer, ReporterTransactionSerializer
 from .models import Transaction
@@ -28,6 +32,17 @@ class TransactionViewSet(mixins.ListModelMixin,
             owners.append(user.pk)
 
             transactions = Transaction.objects.filter(user_id__in=owners)
+
+        # Annotate converted amount
+        currency_name = self.request.query_params.get('currency', None)
+        if currency_name is not None:
+            try:
+                currency = Currency.objects.get(name=currency_name)
+
+                converted_amount_expression = F('sum__amount') / F('sum__currency__rate') * currency.rate
+                transactions = transactions.annotate(converted_amount=ExpressionWrapper(converted_amount_expression, output_field=DecimalField()))
+            except Currency.DoesNotExist:
+                raise exceptions.ParseError(detail='Invalid currency')
 
         return transactions
 

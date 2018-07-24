@@ -15,10 +15,24 @@ class TransactionSerializer(PkHyperlinkedModelSerializer):
         source='sum.amount'
     )
     currency = CurrencyField(source='sum.currency')
+    converted_amount = serializers.DecimalField(amountField.max_digits, amountField.decimal_places, read_only=True)
 
     class Meta:
         model = Transaction
-        fields = ('id', 'user', 'status', 'date', 'amount', 'currency', 'description', 'supplier', 'document_type', 'document_number', 'document')
+        fields = (
+            'id',
+            'user',
+            'status',
+            'date',
+            'amount',
+            'currency',
+            'converted_amount',
+            'description',
+            'supplier',
+            'document_type',
+            'document_number',
+            'document'
+        )
         read_only_fields = ('id', 'user', 'status')
 
     def create(self, validated_data):
@@ -46,4 +60,15 @@ class ReporterTransactionSerializer(TransactionSerializer):
     Only allows certain fields to be updated.
     """
     class Meta(TransactionSerializer.Meta):
-        read_only_fields = ('id', 'user', 'date', 'amount', 'currency', 'description', 'supplier', 'document_type', 'document_number', 'document')
+        read_only_fields = (
+            'id',
+            'user',
+            'date',
+            'amount',
+            'currency',
+            'description',
+            'supplier',
+            'document_type',
+            'document_number',
+            'document'
+        )
