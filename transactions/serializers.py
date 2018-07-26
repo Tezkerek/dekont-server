@@ -1,21 +1,16 @@
 from rest_framework import serializers
 
 from core.serializers import PkHyperlinkedModelSerializer
+from core.fields import AmountField
 from currencies.models import Currency, Sum
 from currencies.fields import CurrencyField
 
 from .models import Transaction
 
-amountField = Sum._meta.get_field('amount')
-
 class TransactionSerializer(PkHyperlinkedModelSerializer):
-    amount = serializers.DecimalField(
-        amountField.max_digits,
-        amountField.decimal_places,
-        source='sum.amount'
-    )
+    amount = AmountField(source='sum.amount')
     currency = CurrencyField(source='sum.currency')
-    converted_amount = serializers.DecimalField(amountField.max_digits, amountField.decimal_places, read_only=True)
+    converted_amount = AmountField(read_only=True)
 
     class Meta:
         model = Transaction

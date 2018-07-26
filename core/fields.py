@@ -1,4 +1,4 @@
-from rest_framework.fields import Field
+from rest_framework.fields import Field, DecimalField
 from rest_framework.reverse import reverse
 
 class PkAndUrlReverseField(Field):
@@ -28,3 +28,10 @@ class PkAndUrlReverseField(Field):
         get_args = getattr(self, 'get_args')
 
         return reverse(self.view_name, args=get_args(obj), request=self.context['request'])
+
+class AmountField(DecimalField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('max_digits', 15)
+        kwargs.setdefault('decimal_places', 2)
+
+        return super().__init__(*args, **kwargs)
