@@ -23,10 +23,9 @@ class CurrencyField(Field):
         if not isinstance(data, str):
             self.fail('invalid')
 
-        currency = Currency.objects.get(name=data)
-
-        # Currency may not exist
-        if currency is None:
+        try:
+            currency = Currency.objects.get(name=data)
+        except Currency.DoesNotExist:
             self.fail('invalid')
 
         return currency
