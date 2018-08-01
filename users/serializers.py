@@ -4,12 +4,10 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.reverse import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from core.fields import PkAndUrlReverseField
-from core.relations import PkHyperlinkedRelatedField
-from core.serializers import PkHyperlinkedModelSerializer
+from core.serializers import PkHyperlinkedModelSerializer, AmountField
+from currencies.fields import CurrencyField
 
 from .models import User
-
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:

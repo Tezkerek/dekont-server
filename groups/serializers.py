@@ -1,9 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 
-from core.fields import PkAndUrlReverseField
-from core.relations import PkHyperlinkedRelatedField
-from core.serializers import PkHyperlinkedModelSerializer
+from core.serializers import PkHyperlinkedModelSerializer, PkAndUrlReverseField
 
 from .models import Group
 

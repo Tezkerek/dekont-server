@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from core.serializers import PkHyperlinkedModelSerializer
-from core.fields import AmountField
+from core.serializers import AmountField
 from currencies.models import Currency, Sum
 from currencies.fields import CurrencyField
 

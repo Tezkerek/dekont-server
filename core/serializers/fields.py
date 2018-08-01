@@ -1,4 +1,4 @@
-from rest_framework.fields import Field, DecimalField
+from rest_framework.fields import Field, ChoiceField, DecimalField
 from rest_framework.reverse import reverse
 
 class PkAndUrlReverseField(Field):
@@ -28,6 +28,33 @@ class PkAndUrlReverseField(Field):
         get_args = getattr(self, 'get_args')
 
         return reverse(self.view_name, args=get_args(obj), request=self.context['request'])
+
+class ChoiceDisplayField(ChoiceField):
+    """
+    ChoiceField that uses the choices' display strings.
+    """
+    def to_internal_value(self, data):
+        if data == '' and self.allow_blank:
+            return ''
+
+        for key, display in self.choice_strings_to_values.items():
+            if display == data:
+                return key
+
+        self.fail('invalid_choice', input=data)
+
+    def _get_choices(self):
+        return super()._get_choices()
+
+    def _set_choices(self, choices):
+        super()._set_choices(choices)
+
+        # Set the dict to the choices' values rather than keys
+        self.choice_strings_to_values = {
+            str(key): display for key, display in self.choices.items()
+        }
+
+    choices = property(_get_choices, _set_choices)
 
 class AmountField(DecimalField):
     def __init__(self, *args, **kwargs):
