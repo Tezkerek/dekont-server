@@ -1,5 +1,7 @@
 from django.db import models
 
+from core.db.models.fields import AmountField
+
 class Currency(models.Model):
     """
     Represents a currency and its exchange rate against EUR.
@@ -21,5 +23,5 @@ class Sum(models.Model):
     def __str__(self):
         return "{} {}".format(self.amount, self.currency.name)
 
-    amount = models.DecimalField(max_digits=15, decimal_places=2)
+    amount = AmountField()
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT, related_name='sums')
