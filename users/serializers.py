@@ -22,10 +22,28 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 class UserSerializer(PkHyperlinkedModelSerializer):
+    balance_amount = AmountField()
+    reporting_currency = CurrencyField()
+
     class Meta:
         model = User
-        fields = ('id', 'email', 'username', 'group', 'approvers', 'reporters', 'is_group_admin')
-        admin_editable_fields = ('username', 'approvers', 'is_group_admin')
+        fields = (
+            'id',
+            'email',
+            'username',
+            'balance_amount',
+            'reporting_currency',
+            'group',
+            'approvers',
+            'reporters',
+            'is_group_admin'
+        )
+        admin_editable_fields = (
+            'username',
+            'is_group_admin',
+            'approvers',
+            'balance_amount',
+        )
         extra_kwargs = {
             'approvers': {
                 'read_only': False,

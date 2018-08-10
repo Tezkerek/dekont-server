@@ -1,7 +1,9 @@
 from django.db import models
 import django.contrib.auth.models as auth_models
 
+from core.db.models.fields import AmountField
 from groups.models import Group
+from currencies.models import Currency
 
 # Create your models here.
 
@@ -44,6 +46,11 @@ class User(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
 
     email = models.EmailField(max_length=254, unique=True)
     username = models.CharField(max_length=64)
+
+    # Used for the balance_amount, and as default currency for transactions
+    reporting_currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
+
+    balance_amount = AmountField(default=0)
 
     # Relationship to group
     group = models.ForeignKey(Group, on_delete=models.SET_NULL, related_name='users', null=True, blank=True)
