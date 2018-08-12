@@ -3,6 +3,7 @@ from django.db.models import F, ExpressionWrapper, DecimalField
 from rest_framework import viewsets, mixins, exceptions
 from rest_framework.permissions import IsAuthenticated
 
+import currencies.utils
 from currencies.models import Currency
 
 from .serializers import TransactionSerializer, ReporterTransactionSerializer
@@ -18,6 +19,39 @@ class TransactionViewSet(mixins.ListModelMixin,
     lookup_field = 'pk'
     serializer_class = TransactionSerializer
     permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        amount = serializer.validated_data['sum']['amount']
+        print(type(amount))
+        transaction = serializer.save()
+
+        # Update the user's balance
+        if amount != 0:
+            transaction.user.balance_amount -= currencies.utils.convert_amount(amount, transaction.sum.currency, transaction.user.reporting_currency)
+            transaction.user.save()
+
+    def perform_update(self, serializer):
+        transaction = serializer.save()
+
+        # Update the user's balance
+        # Convert the old and new amounts to the user's reporting currency
+        old_currency = serializer.instance.sum.currency
+        old_amount = currencies.utils.convert_amount(serializer.instance.sum.amount, old_currency, transaction.user.reporting_currency)
+
+        sum_dict = serializer.validated_data.get('sum', {})
+        new_currency = sum_dict.get('currency', old_currency)
+        new_amount = currencies.utils.convert_amount(sum_dict.get('amount', old_amount), new_currency, transaction.user.reporting_currency)
+
+        difference = new_amount - old_amount
+        if difference != 0:
+            transaction.user.balance_amount -= difference
+            transaction.user.save()
+
+    def perform_destroy(self, instance):
+        # Update the user's balance
+        instance.user.balance_amount += currencies.utils.convert_amount(instance.sum.amount, instance.sum.currency, instance.user.reporting_currency)
+        instance.user.save()
+        instance.delete()
 
     def get_queryset(self):
         # User can access their and their reporters' transactions

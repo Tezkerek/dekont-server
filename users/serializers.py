@@ -44,6 +44,10 @@ class UserSerializer(PkHyperlinkedModelSerializer):
             'approvers',
             'balance_amount',
         )
+        admin_only_fields = (
+            'approvers',
+            'balance_amount'
+        )
         extra_kwargs = {
             'approvers': {
                 'read_only': False,
@@ -63,10 +67,13 @@ class UserSerializer(PkHyperlinkedModelSerializer):
             if non_admin_fields:
                 raise PermissionDenied('Only the user may modify these fields: ' + ', '.join(non_admin_fields))
 
-        # Per-field permissions
-        if 'approvers' in data:
-            if not user.is_group_admin:
-                errors['approvers'] = "Only a group admin can modify this."
+        if not user.is_group_admin:
+            # Some fields may only be modified by an admin
+            admin_only_fields = set(data.keys()) - set(self.Meta.admin_only_fields)
+            if admin_only_fields:
+                raise PermissionDenied('Only an admin may modify these fields: ' + ', '.join(admin_only_fields))
+
+        # User may not un-admin themselves
         if 'is_group_admin' in data:
             if not user.is_group_admin:
                 raise PermissionDenied("Only a group admin may modify these fields: is_group_admin")
