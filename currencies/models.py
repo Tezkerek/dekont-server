@@ -14,7 +14,7 @@ class Currency(models.Model):
         verbose_name_plural = 'currencies'
 
     name = models.CharField(max_length=3)
-    rate = models.FloatField()
+    rate = models.DecimalField(max_digits=40, decimal_places=20)
 
 class Sum(models.Model):
     """
