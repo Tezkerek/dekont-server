@@ -66,5 +66,21 @@ class InvalidateAuthToken(APIView):
             request.auth.delete()
         return Response(status=HTTP_200_OK)
 
+class VerifyAuthToken(APIView):
+    """
+    Verifies if the given token exists.
+    """
+    def get(self, request, token=None):
+        try:
+            auth_token = Token.objects.get(key=token)
+            is_valid = True
+        except Token.DoesNotExist:
+            is_valid = False
+        return Response(
+            {'is_valid': is_valid},
+            status=HTTP_200_OK
+        )
+
 obtain_auth_token = ObtainAuthToken.as_view()
 invalidate_auth_token = InvalidateAuthToken.as_view()
+verify_auth_token = VerifyAuthToken.as_view()
