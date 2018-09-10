@@ -57,15 +57,20 @@ class TransactionViewSet(mixins.ListModelMixin,
         # User can access their and their reporters' transactions
         user = self.request.user
 
-        # Filter by owner
-        owner = self.request.query_params.get('user', None)
-        if owner is not None:
-            transactions = Transaction.objects.filter(user_id=owner)
-        else:
-            owners = list(user.reporters.values_list('pk', flat=True))
-            owners.append(user.pk)
+        # Filter by owners
+        reporting_user_ids = list(user.reporters.values_list('pk', flat=True))
+        owners = self.request.query_params.getlist('users[]', None)
 
-            transactions = Transaction.objects.filter(user_id__in=owners)
+        if owners is None:
+            # Return all transactions by default
+            owners = reporting_user_ids + [user.pk]
+        else:
+            # Only owners that report to the current user are allowed
+            invalid_owners = set(owners) - set(reporting_user_ids)
+            if invalid_owners:
+                raise exceptions.NotFound(detail="Users not found: " + ", ".join(invalid_owners))
+
+        transactions = Transaction.objects.filter(user_id__in=owners)
 
         # Annotate converted amount
         currency_name = self.request.query_params.get('currency', None)
