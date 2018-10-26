@@ -22,7 +22,6 @@ class TransactionViewSet(mixins.ListModelMixin,
 
     def perform_create(self, serializer):
         amount = serializer.validated_data['sum']['amount']
-        print(type(amount))
         transaction = serializer.save()
 
         # Update the user's balance
@@ -59,9 +58,9 @@ class TransactionViewSet(mixins.ListModelMixin,
 
         # Filter by owners
         reporting_user_ids = list(user.reporters.values_list('pk', flat=True))
-        owners = self.request.query_params.getlist('users[]', None)
+        owners = self.request.query_params.getlist('users[]')
 
-        if owners is None:
+        if not owners:
             # Return all transactions by default
             owners = reporting_user_ids + [user.pk]
         else:
