@@ -26,7 +26,7 @@ OPEN_EXCHANGE_RATES_KEY = '5eddf739d4934c2f9fefd546a53dba59'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
