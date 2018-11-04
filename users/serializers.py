@@ -10,9 +10,11 @@ from currencies.fields import CurrencyField
 from .models import User
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
+    reporting_currency = CurrencyField(required=False)
+
     class Meta:
         model = User
-        fields = ('email', 'password', 'is_group_admin')
+        fields = ('email', 'password', 'reporting_currency')
 
     def create(self, validated_data):
         email = validated_data.pop('email')
