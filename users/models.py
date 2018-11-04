@@ -12,6 +12,9 @@ class UserManager(auth_models.BaseUserManager):
         """
         Creates a user with the given fields.
         """
+        # Defaults
+        extra_fields.setdefault('reporting_currency', Currency.objects.get(name="EUR"))
+
         normalized_email = self.normalize_email(email)
 
         user = self.model(email=normalized_email, **extra_fields)
