@@ -1,0 +1,5 @@
+- push to approve (deci 3 stari: netrimis, trimis, aprobata)
+- fara reject. doar o lasa neaprobata pana se rezolva
+
+- o categorie speciala pentru avansuri
+- tranzactiile din categoria "avans" nu se scad din sold, ci se adauga. pot de exemplu sa apara si cu verde
