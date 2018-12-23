@@ -5,6 +5,9 @@
 - fiecare user isi poate pune un singur approver
 // - poate si admin-ul sa schimbe approverii la useri
 
+- tinem minte converted_amount la creare/editare, pentru a mentine cursul
+- la adaugare/editare, userul poate sa aleaga cursul pentru valuta aleasa, fata de reporting_currency
+
 - o categorie speciala pentru avansuri
 - tranzactiile din categoria "avans" nu se scad din sold, ci se adauga. pot de exemplu sa apara si cu verde
 
