@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
-from core.serializers import PkHyperlinkedModelSerializer
+from core.serializers import DekontModelSerializer
 from core.serializers import AmountField
 from currencies.models import Currency, Sum
 from currencies.fields import CurrencyField
 
 from .models import Transaction
 
-class TransactionSerializer(PkHyperlinkedModelSerializer):
+class TransactionSerializer(DekontModelSerializer):
     amount = AmountField(source='sum.amount')
     currency = CurrencyField(source='sum.currency')
     converted_amount = AmountField(read_only=True)
@@ -22,6 +22,7 @@ class TransactionSerializer(PkHyperlinkedModelSerializer):
             'amount',
             'currency',
             'converted_amount',
+            'category',
             'description',
             'supplier',
             'document_type',

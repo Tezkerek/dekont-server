@@ -57,5 +57,11 @@ class PerActionFieldsMixin(object):
 
         return self.context['action'].split('-').pop()
 
+class DekontModelSerializer(serializers.ModelSerializer):
+    """
+    A ModelSerializer to be used for serializing Dekont models.
+    """
+    pass
+
 class PkHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer):
     serializer_related_field = PkHyperlinkedRelatedField

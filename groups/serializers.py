@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 
-from core.serializers import PkHyperlinkedModelSerializer, PkAndUrlReverseField
+from core.serializers import DekontModelSerializer, PkAndUrlReverseField
 
 from .models import Group
 
-class GroupSerializer(PkHyperlinkedModelSerializer):
+class GroupSerializer(DekontModelSerializer):
     group_admin = PkAndUrlReverseField(view_name='user-detail', read_only=True)
 
     class Meta:

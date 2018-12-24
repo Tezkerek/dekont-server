@@ -4,7 +4,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.reverse import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from core.serializers import PkHyperlinkedModelSerializer, AmountField
+from core.serializers import DekontModelSerializer, AmountField
 from currencies.fields import CurrencyField
 
 from .models import User
@@ -23,7 +23,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user = self.Meta.model.objects.create_user(email, password, **validated_data)
         return user
 
-class UserSerializer(PkHyperlinkedModelSerializer):
+class UserSerializer(DekontModelSerializer):
     balance_amount = AmountField()
     reporting_currency = CurrencyField()
 
