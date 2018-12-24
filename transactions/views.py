@@ -5,9 +5,12 @@ from rest_framework.permissions import IsAuthenticated
 
 import currencies.utils
 from currencies.models import Currency
+from groups.permissions import IsInGroup
 
-from .serializers import TransactionSerializer, ReporterTransactionSerializer
-from .models import Transaction
+from .serializers import (TransactionSerializer,
+                          ReporterTransactionSerializer,
+                          CategorySerializer)
+from .models import Transaction, Category
 
 class TransactionViewSet(mixins.ListModelMixin,
                          mixins.RetrieveModelMixin,
@@ -94,3 +97,13 @@ class TransactionViewSet(mixins.ListModelMixin,
                 return ReporterTransactionSerializer
 
         return self.serializer_class
+
+class CategoryViewSet(mixins.ListModelMixin,
+                      viewsets.GenericViewSet):
+    lookup_field = 'pk'
+    serializer_class = CategorySerializer
+    permission_classes = (IsAuthenticated, IsInGroup)
+
+    def get_queryset(self):
+        # The user's group's categories
+        return Category.objects.filter(group_id=self.request.user.group_id)

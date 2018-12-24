@@ -5,7 +5,7 @@ from core.serializers import AmountField
 from currencies.models import Currency, Sum
 from currencies.fields import CurrencyField
 
-from .models import Transaction
+from .models import Transaction, Category
 
 class TransactionSerializer(DekontModelSerializer):
     amount = AmountField(source='sum.amount')
@@ -68,3 +68,9 @@ class ReporterTransactionSerializer(TransactionSerializer):
             'document_number',
             'document'
         )
+
+class CategorySerializer(DekontModelSerializer):
+    class Meta:
+        model = Category
+        fields = ('id', 'name')
+        read_only_fields = ('id',)
