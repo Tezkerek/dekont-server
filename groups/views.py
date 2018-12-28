@@ -43,6 +43,12 @@ class GroupViewSet(mixins.RetrieveModelMixin,
 
         return [permission() for permission in permission_classes]
 
+    def get_serializer_context(self):
+        return {
+            'request': self.request,
+            'action': self.action
+        }
+
     def create(self, request):
         # Validate and save
         serializer = self.get_serializer(data=request.data)

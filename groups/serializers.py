@@ -1,24 +1,32 @@
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 
-from core.serializers import DekontModelSerializer, PkAndUrlReverseField
+from core.serializers import DekontModelSerializer
 
 from .models import Group
 
 class GroupSerializer(DekontModelSerializer):
-    group_admin = PkAndUrlReverseField(view_name='user-detail', read_only=True)
+    group_admin = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Group
         fields = ('id', 'name', 'invite_code', 'users', 'group_admin')
         read_only_fields = ('id', 'invite_code', 'users')
-        admin_only_fields = ('name',)
+        admin_only_fields = {
+            'create': (),
+            'update': ('name',)
+        }
+
+    def get_group_admin(self, obj):
+        return obj.group_admin.id
 
     def validate(self, data):
-        user = self.context['request'].user
+        request = self.context['request']
+        action = self.context['action']
+        user = request.user
 
         # Check if non-admin is trying to set admin-only fields
-        if not user.is_group_admin and set(data.keys()) & set(self.Meta.admin_only_fields):
+        if not user.is_group_admin and set(data.keys()) & set(self.Meta.admin_only_fields[action]):
             raise PermissionDenied('Only a group admin may set these fields: ' + ', '.join(self.Meta.admin_only_fields))
 
         return data
