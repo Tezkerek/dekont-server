@@ -14,7 +14,7 @@ from groups.models import Group
 
 from .serializers import UserSerializer, UserRegistrationSerializer
 from .models import User
-from .permissions import IsUserOrGroupAdmin
+from .permissions import IsUser, IsUserOrGroupAdmin
 
 # Create your views here.
 
@@ -52,8 +52,8 @@ class UserViewSet(mixins.RetrieveModelMixin,
             'patch': permission_classes + [IsUserOrGroupAdmin]
         },
         'group': {
-            'delete': permission_classes + [IsInGroup],
-            'post': permission_classes + [IsNotInGroup]
+            'delete': permission_classes + [IsInGroup, IsUserOrGroupAdmin],
+            'post': permission_classes + [IsNotInGroup, IsUser]
         }
     }
 
@@ -77,7 +77,11 @@ class UserViewSet(mixins.RetrieveModelMixin,
     def group(self, request, pk=None):
         """
         Acts on the user's group relation.
+        A user can act on their own group relation,
+        or they can unset another user's group if they are the group admin.
         """
+        user = self.get_object()
+
         if request.method == 'POST':
             """
             Sets the user's group using the invite code (join group).
@@ -88,16 +92,16 @@ class UserViewSet(mixins.RetrieveModelMixin,
             invite_code = serializer.validated_data['invite_code']
             group = get_object_or_404(Group, invite_code=invite_code)
 
-            request.user.group = group
-            request.user.save()
+            user.group = group
+            user.save()
 
             return Response(status=HTTP_200_OK)
 
         elif request.method == 'DELETE':
             """
-            Unsets the user's group (leave group).
+            Unsets the user's group (leave group or kick from group).
             """
-            request.user.group = None
-            request.user.save()
+            user.group = None
+            user.save()
 
             return Response(status=HTTP_200_OK)
