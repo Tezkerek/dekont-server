@@ -3,6 +3,7 @@ from django.db.models import F, ExpressionWrapper, DecimalField
 from rest_framework import viewsets, mixins, exceptions
 from rest_framework.permissions import IsAuthenticated
 
+from core.pagination import PageCountPagination
 import currencies.utils
 from currencies.models import Currency
 from groups.permissions import IsInGroup
@@ -21,6 +22,7 @@ class TransactionViewSet(mixins.ListModelMixin,
 
     lookup_field = 'pk'
     serializer_class = TransactionSerializer
+    pagination_class = PageCountPagination
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
@@ -85,7 +87,8 @@ class TransactionViewSet(mixins.ListModelMixin,
             except Currency.DoesNotExist:
                 raise exceptions.ParseError(detail='Invalid currency')
 
-        return transactions
+        # Order newest transactions first
+        return transactions.order_by('-date')
 
     def get_serializer_class(self):
         # Approvers get a limited serializer class
