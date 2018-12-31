@@ -8,8 +8,8 @@
 - tinem minte converted_amount la creare/editare, pentru a mentine cursul
 - la adaugare/editare, userul poate sa aleaga cursul pentru valuta aleasa, fata de reporting_currency
 
-- o categorie speciala pentru avansuri
-- tranzactiile din categoria "avans" nu se scad din sold, ci se adauga. pot de exemplu sa apara si cu verde
+- fiecare categorie poate fi de tip debit sau credit
+- tranzactiile din de tip credit nu se scad din sold, ci se adauga. pot de exemplu sa apara si cu verde
 
 - API: batch approving, ca sa pot sa trimit apoi la contabil
 
@@ -23,4 +23,3 @@
 * approverii si contabilii si-i adauga user-ul singur
 
 - edge cases:
-* 
