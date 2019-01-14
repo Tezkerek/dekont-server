@@ -33,7 +33,7 @@ class RegistrationAPIView(APIView):
 
         user = serializer.save()
 
-        response_data = {'user': UserSerializer(user).data}
+        response_data = UserSerializer(user).data
 
         return Response(data=response_data, status=HTTP_201_CREATED)
 
