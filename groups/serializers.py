@@ -18,7 +18,11 @@ class GroupSerializer(DekontModelSerializer):
         }
 
     def get_group_admin(self, obj):
-        return obj.group_admin.id
+        admin = obj.group_admin
+        if admin is not None:
+            return obj.group_admin.id
+        else:
+            return None
 
     def validate(self, data):
         request = self.context['request']

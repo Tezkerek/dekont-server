@@ -13,4 +13,5 @@ urlpatterns = [
     path('logout/', invalidate_auth_token),
     path('register/', views.RegistrationAPIView.as_view()),
     path('', include(simple_router.urls)),
+    path('current-user/', views.current_user)
 ]

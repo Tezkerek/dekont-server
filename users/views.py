@@ -1,5 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from rest_framework.views import APIView
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
@@ -105,3 +105,10 @@ class UserViewSet(mixins.RetrieveModelMixin,
             user.save()
 
             return Response(status=HTTP_200_OK)
+
+class CurrentUser(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request):
+        return redirect('user-detail', pk=request.user.pk)
+
+current_user = CurrentUser.as_view()

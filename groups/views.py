@@ -1,4 +1,6 @@
+from django.shortcuts import get_object_or_404, redirect
 from rest_framework import viewsets, mixins
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
@@ -60,3 +62,10 @@ class GroupViewSet(mixins.RetrieveModelMixin,
         response_data = {'group': serializer.data}
 
         return Response(data=response_data, status=HTTP_201_CREATED)
+
+class CurrentUserGroup(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request):
+        return redirect('group-detail', pk=request.user.group_id)
+
+current_user_group = CurrentUserGroup.as_view()
