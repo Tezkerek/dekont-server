@@ -1,14 +1,13 @@
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import get_object_or_404, redirect
 from rest_framework.views import APIView
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, exceptions
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import exceptions
 from rest_framework.status import HTTP_201_CREATED, HTTP_200_OK
 
-from groups.permissions import IsInGroup, IsNotInGroup
+from groups.permissions import IsInAnyGroup, IsNotInAnyGroup
 from groups.serializers import GroupSerializer, GroupJoinSerializer
 from groups.models import Group
 
@@ -52,8 +51,8 @@ class UserViewSet(mixins.RetrieveModelMixin,
             'patch': permission_classes + [IsUserOrGroupAdmin]
         },
         'group': {
-            'delete': permission_classes + [IsInGroup, IsUserOrGroupAdmin],
-            'post': permission_classes + [IsNotInGroup, IsUser]
+            'delete': permission_classes + [IsInAnyGroup, IsUserOrGroupAdmin],
+            'post': permission_classes + [IsNotInAnyGroup, IsUser]
         }
     }
 

@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from core.pagination import PageCountPagination
 import currencies.utils
 from currencies.models import Currency
-from groups.permissions import IsInGroup
+from groups.permissions import IsInAnyGroup
 
 from .serializers import (TransactionSerializer,
                           ReporterTransactionSerializer,
@@ -105,7 +105,7 @@ class CategoryViewSet(mixins.ListModelMixin,
                       viewsets.GenericViewSet):
     lookup_field = 'pk'
     serializer_class = CategorySerializer
-    permission_classes = (IsAuthenticated, IsInGroup)
+    permission_classes = (IsAuthenticated, IsInAnyGroup)
 
     def get_queryset(self):
         # The user's group's categories

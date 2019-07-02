@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
 
-from .permissions import IsInGroup, IsNotInGroup
+from .permissions import IsInGroup, IsNotInAnyGroup
 from .serializers import GroupSerializer
 from .models import Group
 
@@ -19,7 +19,7 @@ class GroupViewSet(mixins.RetrieveModelMixin,
     permission_classes = (IsAuthenticated,)
     per_action_permission_classes = {
         'create': {
-            'post': permission_classes + (IsNotInGroup,)
+            'post': permission_classes + (IsNotInAnyGroup,)
         },
         'update': {
             'put': permission_classes + (IsInGroup,)
