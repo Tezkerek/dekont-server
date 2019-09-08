@@ -117,3 +117,14 @@ class UserSerializer(DekontModelSerializer):
             current_user.save()
 
         return instance
+
+class UserPublicSerializer(UserSerializer):
+    """
+    A user serializer that contains only public fields.
+    """
+    class Meta(UserSerializer.Meta):
+        fields = (
+            'id',
+            'username',
+            'is_group_admin'
+        )
