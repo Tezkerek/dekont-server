@@ -100,7 +100,7 @@ DATABASES = {
         'NAME': 'dekont',
         'USER': 'dekont',
         'PASSWORD': '4kkegP%&HKbGkYzV5Ctsp6-Me=HXNPGZRt-*QjL5D!VMRy@$xX9YLCcz6zQSD2#s',
-        'HOST': '',
+        'HOST': 'postgres_db',
         'PORT': '5432'
     }
 }
