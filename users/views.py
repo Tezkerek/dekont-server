@@ -56,6 +56,15 @@ class UserViewSet(mixins.RetrieveModelMixin,
         }
     }
 
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+
+        # User with id 0 is the current user
+        if pk == 0:
+            return self.request.user
+
+        return super().get_object()
+
     def get_queryset(self):
         # Only users in the same group
         user = self.request.user
