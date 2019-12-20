@@ -9,7 +9,7 @@ services:
             - ./.db_env
     web:
         build: .
-        command: pipenv run python manage.py runserver 0.0.0.0:8080
+        command: ./start-server.sh
         volumes:
             - .:/code/
         ports:
