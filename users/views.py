@@ -57,10 +57,10 @@ class UserViewSet(mixins.RetrieveModelMixin,
     }
 
     def get_object(self):
-        pk = self.kwargs.get('pk')
+        pk: str = self.kwargs.get(self.lookup_field)
 
         # User with id 0 is the current user
-        if pk == 0:
+        if pk == '0':
             return self.request.user
 
         return super().get_object()
@@ -98,12 +98,14 @@ class UserViewSet(mixins.RetrieveModelMixin,
             serializer.is_valid(raise_exception=True)
 
             invite_code = serializer.validated_data['invite_code']
-            group = get_object_or_404(Group, invite_code=invite_code)
-
-            user.group = group
-            user.save()
-
-            return Response(status=HTTP_200_OK)
+            try:
+                # Try to retrieve the group using the code
+                group = Group.objects.get(invite_code=invite_code)
+                user.group = group
+                user.save()
+                return Response(status=HTTP_200_OK)
+            except Group.DoesNotExist:
+                raise exceptions.NotFound(detail='Invalid code.')
 
         elif request.method == 'DELETE':
             """
