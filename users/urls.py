@@ -5,7 +5,7 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 simple_router = DefaultRouter()
-simple_router.register('users', views.UserViewSet, base_name='user')
+simple_router.register('users', views.UserViewSet, basename='user')
 
 urlpatterns = [
     path('login/', obtain_auth_token),

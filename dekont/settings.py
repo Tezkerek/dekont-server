@@ -105,6 +105,8 @@ DATABASES = {
     }
 }
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # User model
 AUTH_USER_MODEL = 'users.User'
 
