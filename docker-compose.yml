@@ -6,7 +6,7 @@ services:
         ports:
             - "5432:5432"
         env_file:
-            - ./.db_env
+            - ./.env
     web:
         build: .
         command: ./start-server.sh
@@ -16,3 +16,5 @@ services:
             - "8080:8080"
         depends_on:
             - postgres_db
+        env_file:
+            - ./.env
