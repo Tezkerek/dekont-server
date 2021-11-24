@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import environ
+import dj_database_url
 
 env = environ.Env(
     DJANGO_DEBUG=(bool, False)
@@ -102,14 +103,7 @@ WSGI_APPLICATION = 'dekont.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DB'),
-        'USER': env('POSTGRES_USER'),
-        'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': 'postgres_db',
-        'PORT': '5432'
-    }
+    'default': dj_database_url.config(conn_max_age=600, ssl_require=not DEBUG),
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
