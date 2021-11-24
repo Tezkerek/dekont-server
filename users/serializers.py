@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework.compat import authenticate
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.reverse import reverse
 from django.utils.translation import ugettext_lazy as _

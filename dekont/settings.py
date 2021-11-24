@@ -11,21 +11,28 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import environ
+
+env = environ.Env(
+    DJANGO_DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Load .env
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'f@m364)cy&*#0ozx#2m8(@)0!2yk7ne6x_hgjg62x(d+&4n_ee'
-OPEN_EXCHANGE_RATES_KEY = '5eddf739d4934c2f9fefd546a53dba59'
+SECRET_KEY = env('DJANGO_SECRET_KEY')
+OPEN_EXCHANGE_RATES_KEY = env('OPEN_EXCHANGE_RATES_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+DEBUG = env('DJANGO_DEBUG')
 ALLOWED_HOSTS = ['*']
 
 
@@ -97,13 +104,15 @@ WSGI_APPLICATION = 'dekont.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dekont',
-        'USER': 'dekont',
-        'PASSWORD': '4kkegP%&HKbGkYzV5Ctsp6-Me=HXNPGZRt-*QjL5D!VMRy@$xX9YLCcz6zQSD2#s',
+        'NAME': env('POSTGRES_DB'),
+        'USER': env('POSTGRES_USER'),
+        'PASSWORD': env('POSTGRES_PASSWORD'),
         'HOST': 'postgres_db',
         'PORT': '5432'
     }
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # User model
 AUTH_USER_MODEL = 'users.User'

@@ -1,12 +1,10 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import python_2_unicode_compatible
 
 from rest_framework.authtoken.models import Token as SingleToken
 
 
-@python_2_unicode_compatible
 class Token(SingleToken):
     # key is no longer pk
     key = models.CharField(_("Key"), max_length=40, db_index=True, unique=True)
